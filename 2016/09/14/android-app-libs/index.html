@@ -3,26 +3,32 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Hello World | 给生活另一种可能 | 保持善良</title>
+  <title>android安装目录app_libs导致的so加载失败 | 给生活另一种可能 | 保持善良</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
   <meta name="theme-color" content="#3F51B5">
   
   
-  <meta name="keywords" content="">
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
+  <meta name="keywords" content="android,rn,so">
+  <meta name="description" content="坑最近要把公司的android 播放器sdk包装成RN组件，播放器是个很重的组件，但是从RN的理论上讲又是行得通的，所以，那就在我的样板工程中来尝试吧。
+建立一个react-native模块之后，也写了相对应的Component，运行加载一切顺利，但是再次运行，crash，报错。
+12345java.lang.UnsatisfiedLinkError: dalvik.system.DexClass">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://adanchou.me/2016/09/12/hello-world/index.html">
+<meta property="og:title" content="android安装目录app_libs导致的so加载失败">
+<meta property="og:url" content="http://adanchou.me/2016/09/14/android-app-libs/index.html">
 <meta property="og:site_name" content="给生活另一种可能">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
-<meta property="og:updated_time" content="2016-09-12T08:52:35.000Z">
+<meta property="og:description" content="坑最近要把公司的android 播放器sdk包装成RN组件，播放器是个很重的组件，但是从RN的理论上讲又是行得通的，所以，那就在我的样板工程中来尝试吧。
+建立一个react-native模块之后，也写了相对应的Component，运行加载一切顺利，但是再次运行，crash，报错。
+12345java.lang.UnsatisfiedLinkError: dalvik.system.DexClass">
+<meta property="og:image" content="http://adanchou.me/2016/09/14/android-app-libs/crash.jpeg">
+<meta property="og:image" content="http://adanchou.me/2016/09/14/android-app-libs/dirs.png">
+<meta property="og:updated_time" content="2016-09-18T03:17:14.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
+<meta name="twitter:title" content="android安装目录app_libs导致的so加载失败">
+<meta name="twitter:description" content="坑最近要把公司的android 播放器sdk包装成RN组件，播放器是个很重的组件，但是从RN的理论上讲又是行得通的，所以，那就在我的样板工程中来尝试吧。
+建立一个react-native模块之后，也写了相对应的Component，运行加载一切顺利，但是再次运行，crash，报错。
+12345java.lang.UnsatisfiedLinkError: dalvik.system.DexClass">
+<meta name="twitter:image" content="http://adanchou.me/2016/09/14/android-app-libs/crash.jpeg">
   
     <link rel="alternative" href="/atom.xml" title="给生活另一种可能" type="application/atom+xml">
   
@@ -99,7 +105,7 @@ Quick">
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
         </a>
-        <div class="flex-col header-title ellipsis">Hello World</div>
+        <div class="flex-col header-title ellipsis">android安装目录app_libs导致的so加载失败</div>
         
         <div class="search-wrap" id="search-wrap">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
@@ -120,13 +126,15 @@ Quick">
 </header>
 <header class="content-header">
   <div class="container">
-    <h1 class="author">Hello World</h1>
+    <h1 class="author">android安装目录app_libs导致的so加载失败</h1>
     <h5 class="subtitle">
         
-            <time datetime="2016-09-12T08:52:35.000Z" itemprop="datePublished" class="page-time">
-  2016-09-12
+            <time datetime="2016-09-14T10:55:16.000Z" itemprop="datePublished" class="page-time">
+  2016-09-14
 </time>
 
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/wtf/">坑</a></li></ul>
 
         
     </h5>
@@ -134,10 +142,12 @@ Quick">
 </header>
 
     <div class="container body-wrap">
-      <article id="post-hello-world" 
+      <article id="post-android-app-libs" 
   class="article article-type-post" itemprop="blogPost">
     <div class="post-meta flex-row">
         
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/rn/">rn</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/so/">so</a></li></ul>
+
     </div>
     <div class="post-body">
         <aside class="post-widget" id="post-widget">
@@ -183,7 +193,7 @@ Quick">
 
             
             <nav class="post-toc-wrap" id="post-toc">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Quick-Start"><span class="post-toc-text">Quick Start</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Create-a-new-post"><span class="post-toc-text">Create a new post</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Run-server"><span class="post-toc-text">Run server</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Generate-static-files"><span class="post-toc-text">Generate static files</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Deploy-to-remote-sites"><span class="post-toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#坑"><span class="post-toc-text">坑</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#定位"><span class="post-toc-text">定位</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#解决"><span class="post-toc-text">解决</span></a></li></ol>
             </nav>
             
         </aside>
@@ -191,20 +201,21 @@ Quick">
         <div class="post-main">
 
             <div class="post-content" id="post-content" itemprop="postContent">
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+            <h3 id="坑"><a href="#坑" class="headerlink" title="坑"></a>坑</h3><p>最近要把公司的android 播放器sdk包装成RN组件，播放器是个很重的组件，但是从RN的理论上讲又是行得通的，所以，那就在我的样板工程中来尝试吧。</p>
+<p>建立一个react-native模块之后，也写了相对应的Component，运行加载一切顺利，但是再次运行，crash，报错。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">java.lang.UnsatisfiedLinkError: dalvik.system.DexClassLoader[exPathList[[zip file</div><div class="line"> <span class="string">"/data/data/com.sina.rnapp/files/sinaplugin/PlayerSDKCore_V3.2.apk"</span>],</div><div class="line"> nativeLibraryDirectories=[/data/data/com.sina.rnapp/app_libs, /vendor/lib, /system/lib]]]</div><div class="line">  couldn<span class="string">'t find "libsinit.so"</span></div></pre></td></tr></table></figure>
+<img src="/2016/09/14/android-app-libs/crash.jpeg" alt="crash日志" title="crash日志">
+<h3 id="定位"><a href="#定位" class="headerlink" title="定位"></a>定位</h3><p>从log中看发现是没有成功加载so文件，这个不应该啊，迅速定位一下。</p>
+<p>我们的播放器是按插件的方式开发的，用的是<a href="https://github.com/singwhatiwanna/dynamic-load-apk" target="_blank" rel="external">dynamic-load-apk</a><br>来动态加载所需要的播放内核，以便将来动态升级，结果去 so存放目录下看，确实没有发现 libsinit.so 文件，说明确实有问题，经过在模拟器调试发现</p>
+<p>在第一次从asset目录copy出需要的apk后，load所需的so是成功的，并且断点后发现，确实app_libs目录是有的，</p>
+<img src="/2016/09/14/android-app-libs/dirs.png" alt="安装后的目录" title="安装后的目录">
+<p>但是当RN模块加载之后，app_libs 目录竟然被干掉了，到此已经找到原因，说明RN代码里面做了一些处理，<br>也使用了app_libs目录，</p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>尝试使用加前缀目录, 更改目录结构 app_libs =&gt; app_sinalibs 再次尝试，一切正常 。。。。</p>
 
             <blockquote>
                 <p>
                 本文地址：
-                <a href="http://adanchou.me/2016/09/12/hello-world/" target="_blank" rel="external">http://adanchou.me/2016/09/12/hello-world/</a>
+                <a href="http://adanchou.me/2016/09/14/android-app-libs/" target="_blank" rel="external">http://adanchou.me/2016/09/14/android-app-libs/</a>
                 </p>
                 <footer><cite><a href="http://adanchou.me">@给生活另一种可能</a></cite></footer>
             </blockquote>
@@ -212,14 +223,14 @@ Quick">
             
 <nav class="post-nav">
   
-    <div class="waves-block waves-effect prev fl">
-      <a href="/2016/09/14/android-app-libs/" id="post-prev" class="post-nav-link">
-        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">android安装目录app_libs导致的so加载失败</h4>
+
+  
+    <div class="waves-block waves-effect next fr">
+      <a href="/2016/09/12/hello-world/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Hello World</h4>
       </a>
     </div>
-  
-
   
 </nav>
 
@@ -228,7 +239,7 @@ Quick">
             
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="hello-world" data-title="Hello World" data-url="http://adanchou.me/2016/09/12/hello-world/index.html"></div>
+	<div class="ds-thread" data-thread-key="android-app-libs" data-title="android安装目录app_libs导致的so加载失败" data-url="http://adanchou.me/2016/09/14/android-app-libs/index.html"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
@@ -259,10 +270,10 @@ Quick">
 
 <script>
 var BLOG_SHARE = {
-    title: "Hello World",
+    title: "android安装目录app_libs导致的so加载失败",
     pic: "/img/logo.jpg",
     summary: document.getElementsByName('summary')[0].content,
-    url: "http://adanchou.me/2016/09/12/hello-world/index.html"
+    url: "http://adanchou.me/2016/09/14/android-app-libs/index.html"
 };
 </script>
 <div class="global-share" id="global-share">
