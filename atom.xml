@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://adanchou.me/"/>
-  <updated>2016-09-18T03:17:14.000Z</updated>
+  <updated>2016-09-29T11:44:24.000Z</updated>
   <id>http://adanchou.me/</id>
   
   <author>
@@ -14,6 +14,45 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>ios上传打包，遇到的itms，90362，90087 错误</title>
+    <link href="http://adanchou.me/2016/09/29/ios-itms-90362-90087/"/>
+    <id>http://adanchou.me/2016/09/29/ios-itms-90362-90087/</id>
+    <published>2016-09-29T10:45:20.000Z</published>
+    <updated>2016-09-29T11:44:24.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="坑"><a href="#坑" class="headerlink" title="坑"></a>坑</h3><p>最近帮部门内部其他小组利用RN写app，但是对于移动开发的中的，ios和 android工程上的问题，<br>没有移动开发经验还是不行的，所以，工程相关的坑，就让我来趟了。</p>
+<p>打包上传，本以为没什么问题，结果出了几个错误</p>
+<img src="/2016/09/29/ios-itms-90362-90087/itms.png" alt="itms错误" title="itms错误">
+<h3 id="itsm-90087"><a href="#itsm-90087" class="headerlink" title="itsm-90087"></a>itsm-90087</h3><p>提示自建的framework包包含了不支持的架构 x86_64，之前用存静态库（.a）是没有这个问题，<br>查阅相关资料得知，自建framework在打正式包的时候，需要自己做 <code>thin</code> 处理，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">lipo Stickies.app/Contents/MacOS/Stickies -thin i386  </div><div class="line">-output Stickies.app/Contents/MacOS/Stickies.i386</div></pre></td></tr></table></figure>
+<p>例如上段命令，可以从 <code>fat</code> 过的包中，提取出某个架构的包。</p>
+<p><a href="http://ikennd.ac/blog/2015/02/stripping-unwanted-architectures-from-dynamic-libraries-in-xcode/" target="_blank" rel="external">Daniel Kennett</a><br>给出了他的方案，在 <code>Build Phases -&gt; Embed Frameworks</code> 之后加一个 <em>Run Script</em> 即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">APP_PATH=<span class="string">"<span class="variable">$&#123;TARGET_BUILD_DIR&#125;</span>/<span class="variable">$&#123;WRAPPER_NAME&#125;</span>"</span></div><div class="line"></div><div class="line"><span class="comment"># This script loops through the frameworks embedded in the application and</span></div><div class="line"><span class="comment"># removes unused architectures.</span></div><div class="line">find <span class="string">"<span class="variable">$APP_PATH</span>"</span> -name <span class="string">'*.framework'</span> -type d | <span class="keyword">while</span> <span class="built_in">read</span> -r FRAMEWORK</div><div class="line"><span class="keyword">do</span></div><div class="line">FRAMEWORK_EXECUTABLE_NAME=$(defaults <span class="built_in">read</span> <span class="string">"<span class="variable">$FRAMEWORK</span>/Info.plist"</span> CFBundleExecutable)</div><div class="line">FRAMEWORK_EXECUTABLE_PATH=<span class="string">"<span class="variable">$FRAMEWORK</span>/<span class="variable">$FRAMEWORK_EXECUTABLE_NAME</span>"</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"Executable is <span class="variable">$FRAMEWORK_EXECUTABLE_PATH</span>"</span></div><div class="line"></div><div class="line">EXTRACTED_ARCHS=()</div><div class="line"></div><div class="line"><span class="keyword">for</span> ARCH <span class="keyword">in</span> <span class="variable">$ARCHS</span></div><div class="line"><span class="keyword">do</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"Extracting <span class="variable">$ARCH</span> from <span class="variable">$FRAMEWORK_EXECUTABLE_NAME</span>"</span></div><div class="line">lipo -extract <span class="string">"<span class="variable">$ARCH</span>"</span> <span class="string">"<span class="variable">$FRAMEWORK_EXECUTABLE_PATH</span>"</span> -o <span class="string">"<span class="variable">$FRAMEWORK_EXECUTABLE_PATH</span>-<span class="variable">$ARCH</span>"</span></div><div class="line">EXTRACTED_ARCHS+=(<span class="string">"<span class="variable">$FRAMEWORK_EXECUTABLE_PATH</span>-<span class="variable">$ARCH</span>"</span>)</div><div class="line"><span class="keyword">done</span></div><div class="line"></div><div class="line"><span class="built_in">echo</span> <span class="string">"Merging extracted architectures: <span class="variable">$&#123;ARCHS&#125;</span>"</span></div><div class="line">lipo -o <span class="string">"<span class="variable">$FRAMEWORK_EXECUTABLE_PATH</span>-merged"</span> -create <span class="string">"<span class="variable">$&#123;EXTRACTED_ARCHS[@]&#125;</span>"</span></div><div class="line">rm <span class="string">"<span class="variable">$&#123;EXTRACTED_ARCHS[@]&#125;</span>"</span></div><div class="line"></div><div class="line"><span class="built_in">echo</span> <span class="string">"Replacing original executable with thinned version"</span></div><div class="line">rm <span class="string">"<span class="variable">$FRAMEWORK_EXECUTABLE_PATH</span>"</span></div><div class="line">mv <span class="string">"<span class="variable">$FRAMEWORK_EXECUTABLE_PATH</span>-merged"</span> <span class="string">"<span class="variable">$FRAMEWORK_EXECUTABLE_PATH</span>"</span></div><div class="line"></div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure>
+<p>作用是根据工程声明，做thin处理，替换framework</p>
+<h3 id="itsm-90362"><a href="#itsm-90362" class="headerlink" title="itsm-90362"></a>itsm-90362</h3><p>这个itsm提示另一个的framework的info.plist有问题，提示版本号问题，查看一下<br>最小版本是7.0，没有问题啊，实在搞不清楚为什么提示我8.0，我的app版本是8.0<br>framework版本是7.0 没有任何问题啊，</p>
+<p>原来是自建framework最小要求ios8.0的原因，把该framework改成8.0，问题解除</p>
+<h3 id="access-privacy-sensitive"><a href="#access-privacy-sensitive" class="headerlink" title="access privacy-sensitive"></a>access privacy-sensitive</h3><p>终于通过提交，结果收到苹果一封信</p>
+<blockquote>
+<p>This app attempts to access privacy-sensitive data without a usage description.<br>The app’s Info.plist must contain an NSCameraUsageDescription key with a string<br>value explaining to the user how the app uses this data.</p>
+</blockquote>
+<p>感情是我用到了相机，但是没有申请访问该权限的说明,好吧，在info.plist 里面加上</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">key</span>&gt;</span>NSCameraUsageDescription<span class="tag">&lt;/<span class="name">key</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">string</span>&gt;</span>支付安全考虑<span class="tag">&lt;/<span class="name">string</span>&gt;</span></div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;坑&quot;&gt;&lt;a href=&quot;#坑&quot; class=&quot;headerlink&quot; title=&quot;坑&quot;&gt;&lt;/a&gt;坑&lt;/h3&gt;&lt;p&gt;最近帮部门内部其他小组利用RN写app，但是对于移动开发的中的，ios和 android工程上的问题，&lt;br&gt;没有移动开发经验还是不行的，所以，工程
+    
+    </summary>
+    
+      <category term="坑" scheme="http://adanchou.me/categories/wtf/"/>
+    
+    
+      <category term="ios" scheme="http://adanchou.me/tags/ios/"/>
+    
+  </entry>
   
   <entry>
     <title>android安装目录app_libs导致的so加载失败</title>
