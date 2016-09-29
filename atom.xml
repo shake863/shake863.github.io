@@ -59,11 +59,11 @@
     <link href="http://adanchou.me/2016/09/14/android-app-libs/"/>
     <id>http://adanchou.me/2016/09/14/android-app-libs/</id>
     <published>2016-09-14T10:55:16.000Z</published>
-    <updated>2016-09-29T12:31:56.000Z</updated>
+    <updated>2016-09-29T12:39:32.000Z</updated>
     
     <content type="html"><![CDATA[<h3 id="坑"><a href="#坑" class="headerlink" title="坑"></a>坑</h3><p>最近要把公司的android 播放器sdk包装成RN组件，播放器是个很重的组件，但是从RN的理论上讲又是行得通的，所以，那就在我的样板工程中来尝试吧。</p>
 <p>建立一个react-native模块之后，也写了相对应的Component，运行加载一切顺利，但是再次运行，crash，报错。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">java.lang.UnsatisfiedLinkError: dalvik.system.DexClassLoader[exPathList[[zip file</div><div class="line"> <span class="string">"/data/data/com.sina.rnapp/files/sinaplugin/PlayerSDKCore_V3.2.apk"</span>],</div><div class="line"> nativeLibraryDirectories=[/data/data/com.sina.rnapp/app_libs, /vendor/lib, /system/lib]]]</div><div class="line">  couldn<span class="string">'t find "libsinit.so"</span></div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">java.lang.UnsatisfiedLinkError: dalvik.system.DexClassLoader[exPathList[[zip file</div><div class="line"> <span class="string">"/data/data/com.***.rnapp/files/sinaplugin/PlayerSDKCore_V3.2.apk"</span>],</div><div class="line"> nativeLibraryDirectories=[/data/data/com.***.rnapp/app_libs, /vendor/lib, /system/lib]]]</div><div class="line">  couldn<span class="string">'t find "libsinit.so"</span></div></pre></td></tr></table></figure>
 <img src="/2016/09/14/android-app-libs/crash.jpg" alt="crash日志" title="crash日志">
 <h3 id="定位"><a href="#定位" class="headerlink" title="定位"></a>定位</h3><p>从log中看发现是没有成功加载so文件，这个不应该啊，迅速定位一下。</p>
 <p>我们的播放器是按插件的方式开发的，用的是<a href="https://github.com/singwhatiwanna/dynamic-load-apk" target="_blank" rel="external">dynamic-load-apk</a><br>来动态加载所需要的播放内核，以便将来动态升级，结果去 so存放目录下看，确实没有发现 libsinit.so 文件，说明确实有问题，经过在模拟器调试发现</p>
