@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://adanchou.me/"/>
-  <updated>2016-09-29T11:44:24.000Z</updated>
+  <updated>2017-01-18T11:32:01.000Z</updated>
   <id>http://adanchou.me/</id>
   
   <author>
@@ -14,6 +14,283 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>bash shell 环境</title>
+    <link href="http://adanchou.me/2017/01/18/bash-env/"/>
+    <id>http://adanchou.me/2017/01/18/bash-env/</id>
+    <published>2017-01-18T10:55:16.000Z</published>
+    <updated>2017-01-18T11:32:01.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="bash的环境配置"><a href="#bash的环境配置" class="headerlink" title="bash的环境配置"></a>bash的环境配置</h3><p>工作环境是在Mac环境下，默认情况下Mac下bash是没有 <code>.bashrc</code> 的，导致一些自动化工具没有正确<br>配置自己的环境变量，最后出现问题。</p>
+<h3 id="bash的这些配置文件作用"><a href="#bash的这些配置文件作用" class="headerlink" title="bash的这些配置文件作用"></a>bash的这些配置文件作用</h3><ul>
+<li><p>.bash_profile</p>
+<p> 从字面理解 <code>profile</code> 跟账号相关，它在用户每次登录系统时被读取，里面的所有命令都会被bash执行。<br> 在其他shell里面，存在 <code>.profile</code> 和 <code>.login</code>，这些都是和 <code>.bash_profile</code>作用是一样的。</p>
+</li>
+<li><p>.bashrc</p>
+<p>  从字面理解 <code>rc</code> 跟配置项相关，每个bash启动（进程）时候，会去读该文件。一般来说都会    在.bash_profile里调用<code>.bashrc</code> 脚本以便统一配置用户环境。</p>
+</li>
+<li><p>.bash_logout</p>
+<p>  就更好理解了，在退出shell时被读取。所以我们可把一些清理工作的命令放到这文件中。</p>
+</li>
+</ul>
+<p>同时还有一些系统级别的配置项，<code>/etc/bashrc</code> 和 <code>/etc/profile</code>, 当在用户主目录下找不到<code>.bash_profile</code> 和<code>.bashrc</code>时，就会读取这两个文件，在centos下，<code>.bashrc</code> 又会调用 <code>/etc/bashrc</code>。另外 <code>.bash_history</code>是bash shell的历史记录文件</p>
+<h3 id="shell的两种交互属性"><a href="#shell的两种交互属性" class="headerlink" title="shell的两种交互属性"></a>shell的两种交互属性</h3><p>一种，是否<code>interactive shell</code>(交互式Shell)，另一种，是否<code>login shell</code>(登录Shell)</p>
+<ul>
+<li><p>交互式Shell：    没有非选项参数，没有-c，标准输入和标准输出与终端相连的，或者用-i参数启动的Bash实例。可以通过探测PS1变量是否设置或者$-返回值中是否包含字幕i来判定。什么是没有非选项参数？比如bash ~/myscript/clear_temp_files.sh这样执行的Shell脚本的Bash实例，就不是交互式Shell，因为脚本的路径，就是非选项参数。-c又是干什么的？就是使用一个字符串作为Bash的传入参数，比如bash -c ‘ls -ahl’，这种Shell进程也不算是交互式Shell。</p>
+<p>  交互式非登录Shell文件加载顺序如下：</p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/etc/bashrc</div><div class="line">~/.bashrc</div></pre></td></tr></table></figure>
+</li>
+<li><p>登录Shell：    第0个参数以-号开头的Bash实例，或者用-login参数启动的Bash Shell。更加诡异了，什么叫第0个参数以-号开头？你只要随便登录一个*nix系统，Mac也行，Linux也行，然后echo $0，你就明白了，惊讶吧，出来的值竟然是-bash。真的是以-号开头的！！</p>
+<p>  登录Shell(不管是不是交互式的)文件加载顺序如下:</p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">/etc/profile</div><div class="line">~/.bash_profile</div><div class="line">~/.bash_login</div><div class="line">~/.profile</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>一个crontab脚本，没经过处理的话，既不是交互式Shell，也不是登录Shell，所以所有配置都不会执行。<br>怎么处理？比如可以把shabang改一下 <code>#!/bin/bash -l</code>让脚本用登录Shell来解释执行，就可以加载<code>/etc/profile</code>或者，调用Bash解释器，加<code>-l</code>参数也可以。</p>
+<p>上面的信息也就说明了，为什么在Mac下没有执行 <code>.bashrc</code> 的原因了，因为它是交互shell</p>
+<h3 id="shell的set和shopt命令设置"><a href="#shell的set和shopt命令设置" class="headerlink" title="shell的set和shopt命令设置"></a>shell的set和shopt命令设置</h3><p>set命令可以用来定制shell环境，使用选项“o”来打开或者关闭选项。例如打开选项：<code>set -o</code> 选项，关闭选项目：<code>set +o</code> 选项。</p>
+<p>内置set命令选项</p>
+<table>
+<thead>
+<tr>
+<th>选项名</th>
+<th>快捷开关</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>allexport</td>
+<td>-a</td>
+<td>从这个选项中被设置开始就自动标明要输出的新变量或修改过的变量，直至选项被复位</td>
+</tr>
+<tr>
+<td>braceexpand</td>
+<td>-B</td>
+<td>打开花括号扩展，它是一个默认设置</td>
+</tr>
+<tr>
+<td>emacs</td>
+<td></td>
+<td>使用emacs内置编辑器进行命令行编辑，是一个默认设置</td>
+</tr>
+<tr>
+<td>errexit</td>
+<td>-e</td>
+<td>当命令返回一个非零退出状态（失败）时退出。读取初始化文件时不设置</td>
+</tr>
+<tr>
+<td>histexpand</td>
+<td>-H</td>
+<td>执行历史替换时打开!和!!扩展，是一个默认设置</td>
+</tr>
+<tr>
+<td>history</td>
+<td></td>
+<td>打开命令行历史、默认为打开</td>
+</tr>
+<tr>
+<td>ignoreeof</td>
+<td></td>
+<td>禁止用EOF(Ctrl+D)键退出shell。必须键入exit才能退出。等价于设置shell变量IGNOREEOF=10</td>
+</tr>
+<tr>
+<td>keyword</td>
+<td>-k</td>
+<td>将关键字参数放到命令的环境中</td>
+</tr>
+<tr>
+<td>interactive-comments</td>
+<td></td>
+<td>对于交互式shell，把#符后面的文本作为注释</td>
+</tr>
+<tr>
+<td>monitor</td>
+<td>-m</td>
+<td>设置作业控制</td>
+</tr>
+<tr>
+<td>noclobber</td>
+<td>-C</td>
+<td>防止文件在重定向时被重写</td>
+</tr>
+<tr>
+<td>noexec</td>
+<td>-n</td>
+<td>读命令，但不执行。用来检查脚本的语法。交互式运行时不开启</td>
+</tr>
+<tr>
+<td>noglob</td>
+<td>-d</td>
+<td>禁止用路径名扩展。即关闭通配符</td>
+</tr>
+<tr>
+<td>notify</td>
+<td>-b</td>
+<td>后台作业完成时通知用户</td>
+</tr>
+<tr>
+<td>nounset</td>
+<td>-u</td>
+<td>扩展一个未设置的变量时显示一个错误信息</td>
+</tr>
+<tr>
+<td>onecmd</td>
+<td>-t</td>
+<td>在读取和执行命令后退出</td>
+</tr>
+<tr>
+<td>physical</td>
+<td>-P</td>
+<td>设置时，在键入cd或pwd禁止符号链接。用物理目录代替</td>
+</tr>
+<tr>
+<td>privileged</td>
+<td>-p</td>
+<td>设置后，shell不读取.profile或ENV文件，且不从环境继承shell函数，将自动为setuid脚本开启特权</td>
+</tr>
+<tr>
+<td>verbose</td>
+<td>-v</td>
+<td>为调试打开verbose模式</td>
+</tr>
+<tr>
+<td>vi</td>
+<td></td>
+<td>使用vi内置编辑器进行命令行编辑</td>
+</tr>
+<tr>
+<td>xtrace</td>
+<td>-x</td>
+<td>为调试打开echo模式</td>
+</tr>
+</tbody>
+</table>
+<p><code>shopt</code>命令是<code>set</code>命令的一种替代，很多方面都和<code>set</code>命令一样，但它增加了很多选项。可有使用<code>-p</code>选项来查看<code>shopt</code>选项的设置。<code>-u</code>开关表示一个复位的选项，<code>-s</code>表示选项当前被设置。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment"># shopt -s cdspell   #把cdspell选项打开</span></div><div class="line">[root@localhost ~]<span class="comment"># shopt -p cdspell    #打印cdspell设置</span></div><div class="line"><span class="built_in">shopt</span> <span class="_">-s</span> cdspell</div><div class="line">[root@localhost ~]<span class="comment"># shopt -u cdspell    #恢复cdspell设置</span></div></pre></td></tr></table></figure>
+<p>shopt命令选项</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cdable_vars</td>
+<td>如果给cd内置命令的参数不是一个目录，就假设它是一个变量名，变量的值是将要转换到的目录</td>
+</tr>
+<tr>
+<td>cdspell</td>
+<td>纠正cd命令中目录名的较小拼写错误。检查的错误包括颠倒顺序的字符，遗漏的字符以及重复的字符。如果知道一处修改，正确的路径就打印出，命令将继续。只用于交互式shell</td>
+</tr>
+<tr>
+<td>checkhash</td>
+<td>bash在试图执行一个命令前，先在哈希表中寻找，以确定命令是否存在。如果命令不存在，就执行正常路径搜索</td>
+</tr>
+<tr>
+<td>checkwinsize</td>
+<td>bash在每个命令后检查窗口大小，如果有必要，就更新LINES和COLUMNS的值</td>
+</tr>
+<tr>
+<td>cmdhist</td>
+<td>bash试图将一个多行命令的所有行保存在同一个历史项中。这使得多行命令的重新编辑更方便</td>
+</tr>
+<tr>
+<td>dotglob</td>
+<td>bash在文件名扩展的结果中包括以点（.）开头的文件名</td>
+</tr>
+<tr>
+<td>execfail</td>
+<td>如果一个交互式shell不能执行指定给exec内置命令作为参数的文件，它不会退出。如果exec失败，一个交互式shell不会退出</td>
+</tr>
+<tr>
+<td>expand_aliases</td>
+<td>别名被扩展。默认为打开</td>
+</tr>
+<tr>
+<td>extglob</td>
+<td>打开扩展的模式匹配特征（正常的表达式元字符来自Korn shell的文件名扩展）</td>
+</tr>
+<tr>
+<td>histappend</td>
+<td>当shell退出时，历史清单将添加到以HISTFILE变量的值命名的文件中，而不是覆盖文件</td>
+</tr>
+<tr>
+<td>histreedit</td>
+<td>如果readline正被使用，用户有机会重新编辑一个失败的历史替换</td>
+</tr>
+<tr>
+<td>histverify</td>
+<td>如果设置，且readline正被使用，历史替换的结果不会立即传递给shell解析器。而是将结果行装入readline编辑缓冲区中，允许进一步修改</td>
+</tr>
+<tr>
+<td>hostcomplete</td>
+<td>如果设置，且readine正被使用，当正在完成一个包含@的词时bash将试图执行主机名补全。默认为打开</td>
+</tr>
+<tr>
+<td>huponexit</td>
+<td>如果设置，当一个交互式登陆shell退出时，bash将发送一个SIGHUP（挂起信号）给所有的作业</td>
+</tr>
+<tr>
+<td>interactive_comments</td>
+<td>在一个交互式shell中，允许以#开头的词以及同一行中其他的字符被忽略。默认为打开</td>
+</tr>
+<tr>
+<td>lithist</td>
+<td>如果打开，且cmdhist选项也打开，多行命令将用嵌入的换行符保存到历史中，而无需在可能的地方用分号来分隔</td>
+</tr>
+<tr>
+<td>mailwarn</td>
+<td>如果设置，且bash用来检查邮件的文件自从上次检查后已经被访问，将显示消息“The mail in mailfile has been read”</td>
+</tr>
+<tr>
+<td>nocaseglob</td>
+<td>如果设置，当执行文件名扩展时，bash在不区分大小写的方式下匹配文件名</td>
+</tr>
+<tr>
+<td>nullglob</td>
+<td>如果设置，bash允许没有匹配任何文件的文件名模式扩展成一个空串，而不是它们本身</td>
+</tr>
+<tr>
+<td>promptvars</td>
+<td>如果设置，提示串在被扩展后再经历变量和参量扩展。默认为打开</td>
+</tr>
+<tr>
+<td>restricted_shell</td>
+<td>如果shell在受限模式下启动就设置这个选项。该值不能被改变。当执行启动文件时，不能复位该选项，允许启动文件发现shell是否是受限的</td>
+</tr>
+<tr>
+<td>sourcepath</td>
+<td>如果设置，source内置命令使用PATH的值来寻找包含作为参数提供的文件的目录。默认为打开</td>
+</tr>
+<tr>
+<td>source</td>
+<td>点（.）的同义词</td>
+</tr>
+<tr>
+<td>shift_verbose</td>
+<td>如果该选项设置，当移动计数超过位置参量个数时，shift内置命令将打印一个错误消息</td>
+</tr>
+</tbody>
+</table>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;bash的环境配置&quot;&gt;&lt;a href=&quot;#bash的环境配置&quot; class=&quot;headerlink&quot; title=&quot;bash的环境配置&quot;&gt;&lt;/a&gt;bash的环境配置&lt;/h3&gt;&lt;p&gt;工作环境是在Mac环境下，默认情况下Mac下bash是没有 &lt;code&gt;.bashr
+    
+    </summary>
+    
+      <category term="linux" scheme="http://adanchou.me/categories/linux/"/>
+    
+    
+      <category term="linux" scheme="http://adanchou.me/tags/linux/"/>
+    
+      <category term="bash" scheme="http://adanchou.me/tags/bash/"/>
+    
+  </entry>
   
   <entry>
     <title>ios上传打包，遇到的itms，90362，90087 错误</title>
